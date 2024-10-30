@@ -1,0 +1,20 @@
+{
+  "name": "cow-boys",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node ./bin/start"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "express": "^4.21.0",
+    "http-errors": "^2.0.0",
+    "mongodb": "^6.10.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
