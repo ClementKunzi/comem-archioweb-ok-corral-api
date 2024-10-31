@@ -1,34 +1,38 @@
-🤠 Cow-boys API
+# 🤠 Cow-boys API
 
 API developed with Express and MongoDB as part of the ArchiOWeb course in the 3rd year of the Media Engineering bachelor's degree at HEIG-VD.
 
-🚀 Getting Started
+## 🚀 Getting Started
 
-📦 Prerequisites
+### 📦 Prerequisites
 
-    Node.js (v21 or higher)
-    MongoDB (local or cloud instance)
+- **Node.js** (v21 or higher)
+- **MongoDB** (local or cloud instance)
 
-🛠 Installation
+### 🛠 Installation
 
-    Clone the repository:
+1. **Clone the repository:**
 
-        git clone https://github.com/your-username/cow-boys.git
+   ```bash
+   git clone https://github.com/your-username/cow-boys.git
 
-    Navigate to the project directory:
+2. **Navigate to the project directory:**
 
-        cd cow-boys
-    
-    Install dependencies:
+   ```bash
+   cd cow-boys
 
-        npm install
+3. **Install dependencies:**
+   
+   ```bash
+    npm install
 
-🏃‍♂️ Running the Project
+### 🏃‍♂️ Running the Project
 
-    Start the development server:
+1. **Start the development server:**
 
-        npm run dev
+   ```bash
+   npm run dev
+   
+2. **Visit the API**
 
-    Visit the API:
-
-        Open http://localhost:3000 to explore the available endpoints.
+   Open http://localhost:3000 to explore the available endpoints
