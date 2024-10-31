@@ -11,30 +11,22 @@ API developed with Express and MongoDB as part of the ArchiOWeb course in the 3r
 
     Clone the repository:
 
-    bash
+        git clone https://github.com/your-username/cow-boys.git
 
-git clone https://github.com/your-username/cow-boys.git
+    Navigate to the project directory:
 
-Navigate to the project directory:
+        cd cow-boys
+    
+    Install dependencies:
 
-bash
-
-cd cow-boys
-
-Install dependencies:
-
-bash
-
-npm install
+        npm install
 
 🏃‍♂️ Running the Project
 
     Start the development server:
 
-    bash
+        npm run dev
 
-npm run dev
+    Visit the API:
 
-Visit the API:
-
-Open http://localhost:3000 to explore the available endpoints.
+        Open http://localhost:3000 to explore the available endpoints.
