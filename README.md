@@ -14,7 +14,7 @@ API developed with Express and MongoDB as part of the ArchiOWeb course in the 3r
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/cow-boys.git
+   git clone git@github.com:ClementKunzi/cow-boys.git
 
 2. **Navigate to the project directory:**
 
