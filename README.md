@@ -1,4 +1,4 @@
-# 🤠 Cow-boys API
+# 🤠 OK-Corral API
 
 API developed with Express and MongoDB as part of the ArchiOWeb course in the 3rd year of the Media Engineering bachelor's degree at HEIG-VD.
 
