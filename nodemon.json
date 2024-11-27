@@ -1,3 +1,13 @@
 {
-  "watch": ["app.js", "bin/start.js", "routes/**/*"]
+  "watch": [
+    "app.js",
+    "bin/start.js",
+    "routes/**/*",
+    "validators/**/*",
+    "middlewares/**/*",
+    "models/**/*",
+    "services/**/*",
+    "config/**/*",
+    "utils/**/*"
+  ]
 }
