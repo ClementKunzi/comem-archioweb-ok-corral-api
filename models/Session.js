@@ -10,6 +10,20 @@ const SessionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Game",
   },
+  session_code: {
+    type: String,
+    unique: true,
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+});
+SessionSchema.pre("save", function (next) {
+  if (!this.session_code) {
+    this.session_code = Math.floor(100000 + Math.random() * 900000).toString(); // Génère un code de 6 chiffres
+  }
+  next();
 });
 const Session = mongoose.model("Session", SessionSchema);
 export default Session;

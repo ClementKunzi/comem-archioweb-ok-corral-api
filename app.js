@@ -4,8 +4,10 @@ import logger from "morgan";
 import connectToDatabase from "./db.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/user.js";
+import sessionsRouter from "./routes/session.js";
 import User from "./models/User.js"; // Importe le modèle User
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const app = express();
@@ -21,7 +23,8 @@ async function startServer() {
     console.log("Connected to MongoDB successfully.");
 
     app.use("/", indexRouter);
-    app.use("/user", usersRouter);
+    app.use("/user", usersRouter); // Utilisez le chemin correct pour les utilisateurs
+    app.use("/session", sessionsRouter); // Utilisez le chemin correct pour les sessions
 
     app.use((req, res, next) => {
       next(createError(404));
