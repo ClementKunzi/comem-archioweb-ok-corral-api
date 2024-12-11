@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 async function connectToDatabase() {
-  const uri = "mongodb://127.0.0.1:27017/mydatabase"; // Remplace par ton URI
+  const uri = process.env.DATABASE_URL; // Utilise la variable d'environnement
   await mongoose.connect(uri);
   console.log("Connected to MongoDB successfully.");
 }
