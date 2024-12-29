@@ -5,7 +5,7 @@ import connectToDatabase from "./db.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/user.js";
 import sessionsRouter from "./routes/session.js";
-import User from "./models/User.js"; // Importe le modèle User
+import swaggerRouter from "./swagger.js"; // Importer le routeur Swagger
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -25,6 +25,7 @@ async function startServer() {
     app.use("/", indexRouter);
     app.use("/user", usersRouter); // Utilisez le chemin correct pour les utilisateurs
     app.use("/session", sessionsRouter); // Utilisez le chemin correct pour les sessions
+    app.use("/api-docs", swaggerRouter); // Utilisez le routeur Swagger
 
     app.use((req, res, next) => {
       next(createError(404));

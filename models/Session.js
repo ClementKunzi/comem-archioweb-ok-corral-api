@@ -18,6 +18,23 @@ const SessionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  team1id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Team",
+  },
+  team2id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Team",
+  },
+  status: {
+    type: String,
+    enum: ["open", "closed", "pending"],
+    default: "pending",
+  },
 });
 SessionSchema.pre("save", function (next) {
   if (!this.session_code) {

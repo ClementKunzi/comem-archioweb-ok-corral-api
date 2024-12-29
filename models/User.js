@@ -15,6 +15,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  profilePhoto: {
+    type: String, // Chemin vers la photo de profil
+  },
+  location: {
+    type: { type: String, enum: ["Point"], required: true },
+    coordinates: { type: [Number], required: true },
+  },
 });
+UserSchema.index({ location: "2dsphere" });
 const User = mongoose.model("User", UserSchema);
 export default User;
