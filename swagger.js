@@ -14,7 +14,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://comem-archioweb-ok-corral-api.onrender.com",
+        url: "https://comem-archioweb-ok-corral-api.onrender.com/",
       },
     ],
   },
