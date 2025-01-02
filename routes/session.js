@@ -11,18 +11,17 @@ const router = express.Router();
  *     Session:
  *       type: object
  *       required:
- *         - userId
- *         - gameId
+ *         - game_id
+ *         - session_code
+ *         - admin
+ *         - user
+ *         - team1id
+ *         - team2id
+ *         - status
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated id of the session
- *         userId:
- *           type: string
- *           description: The ID of the user who created the session
- *         gameId:
- *           type: string
- *           description: The ID of the game associated with the session
  *         created_at:
  *           type: string
  *           format: date-time
@@ -31,12 +30,39 @@ const router = express.Router();
  *           type: string
  *           format: date-time
  *           description: The date and time when the session was closed
+ *         game_id:
+ *           type: string
+ *           description: The ID of the game associated with the session
+ *         session_code:
+ *           type: string
+ *           description: The unique code of the session
+ *         admin:
+ *           type: string
+ *           description: The ID of the admin user who created the session
+ *         user:
+ *           type: string
+ *           description: The ID of the user who joined the session
+ *         team1id:
+ *           type: string
+ *           description: The ID of team 1
+ *         team2id:
+ *           type: string
+ *           description: The ID of team 2
+ *         status:
+ *           type: string
+ *           enum: [open, closed, pending]
+ *           description: The status of the session
  *       example:
  *         id: d5fE_asz
- *         userId: 60d5f9b5f8d2c72b8c8e4b8e
- *         gameId: 60d5f9b5f8d2c72b8c8e4b8f
  *         created_at: 2023-10-01T10:00:00.000Z
  *         closed_at: 2023-10-01T12:00:00.000Z
+ *         game_id: 60d5f9b5f8d2c72b8c8e4b8e
+ *         session_code: "123456"
+ *         admin: 60d5f9b5f8d2c72b8c8e4b8f
+ *         user: 60d5f9b5f8d2c72b8c8e4b90
+ *         team1id: 60d5f9b5f8d2c72b8c8e4b91
+ *         team2id: 60d5f9b5f8d2c72b8c8e4b92
+ *         status: open
  */
 
 /**
@@ -140,7 +166,7 @@ router.patch("/close/:id", auth, async (req, res) => {
   try {
     const session = await Session.findByIdAndUpdate(
       req.params.id,
-      { closed_at: Date.now() },
+      { closed_at: Date.now(), status: "closed" },
       { new: true, runValidators: true }
     );
     if (!session) {

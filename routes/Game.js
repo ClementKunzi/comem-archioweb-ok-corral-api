@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "../middlewares/auth.js";
-import Game from "../models/Game.js";
+import Game from "../models/Games.js";
 
 const router = express.Router();
 
@@ -11,27 +11,42 @@ const router = express.Router();
  *     Game:
  *       type: object
  *       required:
- *         - name
+ *         - session_id
  *         - game_mode_id
+ *         - team_1_id
+ *         - team_2_id
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated id of the game
- *         name:
- *           type: string
- *           description: The name of the game
- *         game_mode_id:
- *           type: string
- *           description: The ID of the game mode associated with the game
  *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time when the game was created
+ *         closed_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time when the game was closed
+ *         session_id:
+ *           type: string
+ *           description: The ID of the session associated with the game
+ *         game_mode_id:
+ *           type: string
+ *           description: The ID of the game mode associated with the game
+ *         team_1_id:
+ *           type: string
+ *           description: The ID of team 1
+ *         team_2_id:
+ *           type: string
+ *           description: The ID of team 2
  *       example:
  *         id: d5fE_asz
- *         name: Chess
- *         game_mode_id: 60d5f9b5f8d2c72b8c8e4b8e
  *         created_at: 2023-10-01T10:00:00.000Z
+ *         closed_at: 2023-10-01T12:00:00.000Z
+ *         session_id: 60d5f9b5f8d2c72b8c8e4b8e
+ *         game_mode_id: 60d5f9b5f8d2c72b8c8e4b8f
+ *         team_1_id: 60d5f9b5f8d2c72b8c8e4b90
+ *         team_2_id: 60d5f9b5f8d2c72b8c8e4b91
  */
 
 /**
@@ -273,6 +288,69 @@ router.get("/stats", auth, async (req, res) => {
     res.status(200).json(stats);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * @swagger
+ * /game/result:
+ *   post:
+ *     summary: Calculate the winner of a game
+ *     tags: [Games]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               gameId:
+ *                 type: string
+ *                 description: The ID of the game
+ *               team1Id:
+ *                 type: string
+ *                 description: The ID of team 1
+ *               team2Id:
+ *                 type: string
+ *                 description: The ID of team 2
+ *               team1Timestamp:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The timestamp of team 1's button press
+ *               team2Timestamp:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The timestamp of team 2's button press
+ *     responses:
+ *       200:
+ *         description: The winner was calculated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 winnerId:
+ *                   type: string
+ *                   description: The ID of the winning team
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post("/result", async (req, res) => {
+  const { gameId, team1Id, team2Id, team1Timestamp, team2Timestamp } = req.body;
+
+  if (!gameId || !team1Id || !team2Id || !team1Timestamp || !team2Timestamp) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const winnerId =
+      new Date(team1Timestamp) < new Date(team2Timestamp) ? team1Id : team2Id;
+
+    res.status(200).json({ winnerId });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
