@@ -5,7 +5,7 @@ import connectToDatabase from "./db.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/user.js";
 import sessionsRouter from "./routes/session.js";
-import gamesRouter from "./routes/game.js";
+import gamesRouter from "./routes/Game.js";
 import swaggerRouter from "./swagger.js"; // Importer le routeur Swagger
 import dotenv from "dotenv";
 
