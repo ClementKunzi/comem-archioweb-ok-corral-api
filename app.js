@@ -2,6 +2,7 @@ import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
 import cors from "cors";
+import multer from "multer";
 import connectToDatabase from "./db.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/user.js";
@@ -19,6 +20,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
+const upload = multer();
 
 async function startServer() {
   try {

@@ -1,4 +1,3 @@
-// middlewares/validateUser.js
 import { body, validationResult } from "express-validator";
 import User from "../models/User.js";
 

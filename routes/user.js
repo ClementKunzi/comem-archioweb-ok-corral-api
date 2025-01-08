@@ -8,6 +8,7 @@ import User from "../models/User.js";
 import validateUser from "../validators/validateUser.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js"; // Importer le middleware upload
+import multer from "multer";
 
 const router = express.Router();
 
@@ -86,7 +87,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post("/", validateUser, async (req, res) => {
+router.post("/", upload.none(), validateUser, async (req, res) => {
   try {
     const user = new User(req.body);
     user.password = await bcrypt.hash(user.password, 8);
