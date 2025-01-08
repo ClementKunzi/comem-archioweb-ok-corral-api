@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     type: String, // Chemin vers la photo de profil
   },
   location: {
-    type: { type: String, enum: ["Point"], required: true },
+    type: { type: String, enum: ["Point"], required: false },
     coordinates: { type: [Number], required: false },
   },
 });
