@@ -144,7 +144,9 @@ router.post("/", upload.none(), validateUser, async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username }).select("+password -__v");
+    console.log("Request body:", req.body); // Log pour vérifier le contenu de la requête
+
+    const user = await User.findOne({ username }).select("+password"); // Inclure uniquement le champ password
     if (!user) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
@@ -159,6 +161,7 @@ router.post("/login", async (req, res) => {
     });
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
+    console.error("Error in login route:", err); // Log pour vérifier l'erreur
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
