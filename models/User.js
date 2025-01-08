@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   },
   location: {
     type: { type: String, enum: ["Point"], required: true },
-    coordinates: { type: [Number], required: true },
+    coordinates: { type: [Number], required: false },
   },
 });
 UserSchema.index({ location: "2dsphere" });
