@@ -141,7 +141,7 @@ router.post("/", upload.none(), validateUser, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/login", async (req, res) => {
+router.post("/login", upload.none(), async (req, res) => {
   try {
     const { username, password } = req.body;
     console.log("Request body:", req.body); // Log pour vérifier le contenu de la requête
