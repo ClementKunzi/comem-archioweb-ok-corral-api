@@ -196,11 +196,7 @@ router.post("/login", upload.none(), async (req, res) => {
  */
 router.post("/logout", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    const user = req.user;
 
     user.isLoggedIn = false;
     await user.save();
@@ -213,7 +209,6 @@ router.post("/logout", auth, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 /**
  * @swagger
  * /user/profile-photo:
