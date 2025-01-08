@@ -1,6 +1,7 @@
 import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
+import cors from "cors";
 import connectToDatabase from "./db.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/user.js";
@@ -17,6 +18,7 @@ const port = 3001;
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 async function startServer() {
   try {

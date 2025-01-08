@@ -14,10 +14,6 @@ const SessionSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  admin: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
