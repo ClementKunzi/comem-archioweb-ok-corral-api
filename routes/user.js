@@ -9,6 +9,8 @@ import validateUser from "../validators/validateUser.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js"; // Importer le middleware upload
 import multer from "multer";
+import checkAlreadyLoggedIn from "../middlewares/checkAlreadyLoggedIn.js";
+import BlacklistToken from "../models/BlacklistToken.js";
 
 const router = express.Router();
 
@@ -141,7 +143,7 @@ router.post("/", upload.none(), validateUser, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/login", upload.none(), async (req, res) => {
+router.post("/login", upload.none(), checkAlreadyLoggedIn, async (req, res) => {
   try {
     const { username, password } = req.body;
     console.log("Request body:", req.body); // Log pour vérifier le contenu de la requête
@@ -180,9 +182,12 @@ router.post("/login", upload.none(), async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/logout", upload.none(), auth, (req, res) => {
+router.post("/logout", upload.none(), auth, async (req, res) => {
   try {
-    // Informer le client de supprimer le token
+    // Ajouter le token à la liste noire
+    const blacklistToken = new BlacklistToken({ token: req.token });
+    await blacklistToken.save();
+
     res.status(200).json({ message: "Logout successful" });
   } catch (err) {
     console.error("Error in logout route:", err); // Log pour vérifier l'erreur
