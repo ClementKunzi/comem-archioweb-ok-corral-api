@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/User.js";
-import BlacklistToken from "../models/BlacklistToken.js"; // Importer le modèle BlacklistToken
+import BlacklistToken from "../models/BlacklistToken.js";
 
 dotenv.config();
 
@@ -13,17 +13,17 @@ const auth = async (req, res, next) => {
 
   const token = authHeader.replace("Bearer ", "");
   try {
+    // Vérifier si le token est dans la liste noire
+    const tokenInBlacklist = await BlacklistToken.findOne({ token });
+    if (tokenInBlacklist) {
+      return res.status(401).json({ error: "Invalid token." });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
     if (!user) {
       return res.status(401).json({ error: "Access denied. User not found." });
-    }
-
-    // Vérifier si le token est dans la liste noire
-    const tokenInBlacklist = await BlacklistToken.findOne({ token });
-    if (tokenInBlacklist) {
-      return res.status(401).json({ error: "Invalid token." });
     }
 
     req.token = token;

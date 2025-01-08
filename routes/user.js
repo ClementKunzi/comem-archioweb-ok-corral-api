@@ -51,6 +51,9 @@ const router = express.Router();
  *               items:
  *                 type: number
  *           description: The user's location
+ *         isLoggedIn:
+ *           type: boolean
+ *           description: Indicates if the user is currently logged in
  *       example:
  *         id: d5fE_asz
  *         username: johndoe
@@ -93,6 +96,7 @@ router.post("/", upload.none(), validateUser, async (req, res) => {
   try {
     const user = new User(req.body);
     user.password = await bcrypt.hash(user.password, 8);
+    user.isLoggedIn = true; // Set isLoggedIn to false by default
     await user.save();
 
     // Récupérer l'utilisateur sans le mot de passe et __v
@@ -143,12 +147,11 @@ router.post("/", upload.none(), validateUser, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/login", upload.none(), checkAlreadyLoggedIn, async (req, res) => {
+router.post("/login", upload.none(), async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("Request body:", req.body); // Log pour vérifier le contenu de la requête
+    const user = await User.findOne({ username }).select("+password");
 
-    const user = await User.findOne({ username }).select("+password"); // Inclure uniquement le champ password
     if (!user) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
@@ -158,12 +161,21 @@ router.post("/login", upload.none(), checkAlreadyLoggedIn, async (req, res) => {
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
+    if (user.isLoggedIn) {
+      return res
+        .status(400)
+        .json({ error: "User already logged in on another session." });
+    }
+
+    user.isLoggedIn = true;
+    await user.save();
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
-    console.error("Error in login route:", err); // Log pour vérifier l'erreur
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -182,15 +194,22 @@ router.post("/login", upload.none(), checkAlreadyLoggedIn, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/logout", upload.none(), auth, async (req, res) => {
+router.post("/logout", auth, async (req, res) => {
   try {
-    // Ajouter le token à la liste noire
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.isLoggedIn = false;
+    await user.save();
+
     const blacklistToken = new BlacklistToken({ token: req.token });
     await blacklistToken.save();
 
     res.status(200).json({ message: "Logout successful" });
   } catch (err) {
-    console.error("Error in logout route:", err); // Log pour vérifier l'erreur
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

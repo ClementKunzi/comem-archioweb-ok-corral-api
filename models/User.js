@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
     type: { type: String, enum: ["Point"], required: false },
     coordinates: { type: [Number], required: false },
   },
+  isLoggedIn: {
+    type: Boolean,
+    default: false,
+  },
 });
 UserSchema.index({ location: "2dsphere" });
 const User = mongoose.model("User", UserSchema);
