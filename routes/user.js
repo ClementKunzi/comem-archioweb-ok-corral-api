@@ -180,7 +180,7 @@ router.post("/login", upload.none(), async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/logout", auth, (req, res) => {
+router.post("/logout", upload.none(), auth, (req, res) => {
   try {
     // Informer le client de supprimer le token
     res.status(200).json({ message: "Logout successful" });
