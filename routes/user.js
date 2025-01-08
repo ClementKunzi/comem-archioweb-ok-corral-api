@@ -168,6 +168,30 @@ router.post("/login", upload.none(), async (req, res) => {
 
 /**
  * @swagger
+ * /user/logout:
+ *   post:
+ *     summary: Logout a user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post("/logout", auth, (req, res) => {
+  try {
+    // Informer le client de supprimer le token
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    console.error("Error in logout route:", err); // Log pour vérifier l'erreur
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+/**
+ * @swagger
  * /user/profile-photo:
  *   post:
  *     summary: Upload a profile photo
