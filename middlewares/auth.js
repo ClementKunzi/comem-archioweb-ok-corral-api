@@ -16,6 +16,15 @@ const auth = async (req, res, next) => {
     // Vérifier si le token est dans la liste noire
     const tokenInBlacklist = await BlacklistToken.findOne({ token });
     if (tokenInBlacklist) {
+      // Mettre à jour le champ isLoggedIn de l'utilisateur
+      const decoded = jwt.decode(token);
+      if (decoded && decoded.userId) {
+        const user = await User.findById(decoded.userId);
+        if (user) {
+          user.isLoggedIn = false;
+          await user.save();
+        }
+      }
       return res.status(401).json({ error: "Invalid token." });
     }
 
@@ -30,6 +39,18 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+    // Si le token est expiré, mettre à jour le champ isLoggedIn de l'utilisateur
+    if (err.name === "TokenExpiredError") {
+      const decoded = jwt.decode(token);
+      if (decoded && decoded.userId) {
+        const user = await User.findById(decoded.userId);
+        if (user) {
+          user.isLoggedIn = false;
+          await user.save();
+        }
+      }
+      return res.status(401).json({ error: "Token expired." });
+    }
     res.status(400).json({ error: "Invalid token." });
   }
 };

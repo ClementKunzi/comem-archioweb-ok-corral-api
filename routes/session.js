@@ -1,6 +1,7 @@
 import express from "express";
 import auth from "../middlewares/auth.js";
 import Session from "../models/Session.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -91,7 +92,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post("/", auth, async (req, res) => {
+router.post("/", upload.none(), auth, async (req, res) => {
   try {
     const session = new Session({
       ...req.body,
@@ -125,7 +126,7 @@ router.post("/", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.get("/", auth, async (req, res) => {
+router.get("/", upload.none(), auth, async (req, res) => {
   try {
     const sessions = await Session.find().populate("user", "-password -__v"); // Remplit le champ admin avec les informations de l'utilisateur sans le mot de passe et __v
     res.status(200).json(sessions);
@@ -161,7 +162,7 @@ router.get("/", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.patch("/close/:id", auth, async (req, res) => {
+router.patch("/close/:id", upload.none(), auth, async (req, res) => {
   try {
     const session = await Session.findByIdAndUpdate(
       req.params.id,

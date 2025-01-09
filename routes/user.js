@@ -279,7 +279,7 @@ router.post(
  *       500:
  *         description: Internal Server Error
  */
-router.delete("/profile-photo", auth, async (req, res) => {
+router.delete("/profile-photo", upload.none(), auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
     if (!user) {
@@ -319,7 +319,7 @@ router.delete("/profile-photo", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.get("/", auth, async (req, res) => {
+router.get("/", upload.none(), auth, async (req, res) => {
   try {
     const users = await User.find().select("-password -__v"); // Récupère tous les utilisateurs
     res.status(200).json(users); // Retourne les utilisateurs en JSON
@@ -356,7 +356,7 @@ router.get("/", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", upload.none(), auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password -__v"); // Récupère l'utilisateur par son ID
     if (!user) {
@@ -396,7 +396,7 @@ router.get("/:id", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.get("/username/:username", auth, async (req, res) => {
+router.get("/username/:username", upload.none(), auth, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }).select(
       "-password -__v"
@@ -444,7 +444,7 @@ router.get("/username/:username", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, upload.none(), async (req, res) => {
   try {
     const updates = req.body;
     const user = await User.findByIdAndUpdate(
@@ -485,7 +485,7 @@ router.put("/:id", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", upload.none(), auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id); // Récupère l'utilisateur par son ID
     if (!user) {
@@ -531,7 +531,7 @@ router.delete("/:id", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.put("/:id/location", auth, async (req, res) => {
+router.put("/:id/location", upload.none(), auth, async (req, res) => {
   try {
     const { coordinates } = req.body;
     const user = await User.findByIdAndUpdate(
