@@ -215,16 +215,14 @@ router.get("/validate/:code", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    if (session.status !== "open") {
+    if (session.status !== "pending") {
       return res.status(404).json({ error: "Session is closed" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Session code is valid and the session is open",
-        session,
-      });
+    res.status(200).json({
+      message: "Session code is valid and the session is open",
+      session,
+    });
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
   }
