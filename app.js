@@ -11,6 +11,8 @@ import gamesRouter from "./routes/Game.js";
 import swaggerRouter from "./swagger.js"; // Importer le routeur Swagger
 import dotenv from "dotenv";
 
+import WSServerRoomManager from "./websocket/WSServerRoomManager.mjs";
+
 dotenv.config();
 
 const app = express();
@@ -58,5 +60,6 @@ async function startServer() {
 }
 
 startServer();
+
 
 export default app;

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "start": "node ./bin/start"
+    "start": "node ./bin/start",
+    "ws": "node ./webSocketServer.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -22,7 +23,8 @@
     "multer": "^1.4.5-lts.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

@@ -2,6 +2,9 @@ import express from "express";
 import auth from "../middlewares/auth.js";
 import Session from "../models/Session.js";
 import upload from "../middlewares/upload.js";
+import WsClient from '../websocket/WSClient.js';
+const wsClient = new WsClient('ws://localhost:8887');
+await wsClient.connect();
 
 const router = express.Router();
 
@@ -100,7 +103,9 @@ router.post("/", upload.none(), auth, async (req, res) => {
       user: req.user._id, // Ajoute l'utilisateur actuel comme user
     });
     await session.save();
-    res.status(201).json({ message: "Session successfully created", session });
+    res.status(201).json({ message: "Session successfully created", session });    
+    // Send a message to the 'api' channel
+    wsClient.rpc('createChan', { message: 'New session created', session });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

@@ -2,7 +2,13 @@ import express from "express";
 import auth from "../middlewares/auth.js";
 import Game from "../models/Games.js";
 
+// import WsClient from '../websocket/WSClient.js';
+// const wsClient = new WsClient('ws://localhost:8887');
+// await wsClient.connect();
+
 const router = express.Router();
+
+// wsClient.pub('duel_123456', 'Hello, world!');
 
 /**
  * @swagger
