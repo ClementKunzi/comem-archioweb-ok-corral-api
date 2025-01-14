@@ -96,7 +96,6 @@ router.post("/", upload.none(), auth, async (req, res) => {
   try {
     const session = new Session({
       ...req.body,
-      admin: req.user._id, // Ajoute l'utilisateur actuel comme admin
       user: req.user._id, // Ajoute l'utilisateur actuel comme user
     });
     await session.save();
@@ -178,4 +177,56 @@ router.patch("/close/:id", upload.none(), auth, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /session/validate/{code}:
+ *   get:
+ *     summary: Validate a session code
+ *     tags: [Sessions]
+ *     parameters:
+ *       - in: path
+ *         name: code
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The session code
+ *     responses:
+ *       200:
+ *         description: The session code is valid and the session is open
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 session:
+ *                   $ref: '#/components/schemas/Session'
+ *       400:
+ *         description: Invalid session code
+ *       404:
+ *         description: Session not found or closed
+ */
+router.get("/validate/:code", async (req, res) => {
+  try {
+    const session = await Session.findOne({ session_code: req.params.code });
+
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    if (session.status !== "open") {
+      return res.status(404).json({ error: "Session is closed" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Session code is valid and the session is open",
+        session,
+      });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 export default router;
