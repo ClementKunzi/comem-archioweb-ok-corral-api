@@ -14,7 +14,6 @@ const router = express.Router();
  *       required:
  *         - game_id
  *         - session_code
- *         - user
  *         - team1id
  *         - team2id
  *         - status
@@ -50,6 +49,15 @@ const router = express.Router();
  *           enum: [open, closed, pending]
  *           description: The status of the session
  *       example:
+ *         id: "60d5f9b5f8d2c72b8c8e4b8e"
+ *         created_at: "2023-10-01T12:00:00Z"
+ *         closed_at: null
+ *         game_id: "60d5f9b5f8d2c72b8c8e4b8e"
+ *         session_code: "ABC123"
+ *         user: "60d5f9b5f8d2c72b8c8e4b90"
+ *         team1id: "60d5f9b5f8d2c72b8c8e4b91"
+ *         team2id: "60d5f9b5f8d2c72b8c8e4b92"
+ *         status: "open"
  */
 
 /**
@@ -67,12 +75,6 @@ const router = express.Router();
  *     tags: [Sessions]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Session'
  *     responses:
  *       201:
  *         description: The session was successfully created
@@ -206,7 +208,7 @@ router.get("/validate/:code", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    if (session.status !== "pending") {
+    if (session.status !== "open") {
       return res.status(404).json({ error: "Session is closed" });
     }
 
@@ -218,4 +220,5 @@ router.get("/validate/:code", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 export default router;
