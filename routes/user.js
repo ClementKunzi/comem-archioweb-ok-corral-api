@@ -82,6 +82,12 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/User'
+ *           example:
+ *             username: johndoe
+ *             email: johndoe@example.com
+ *             password: secret
+ *             profilePhoto: uploads/12345.jpg
+ *             location: { type: "Point", coordinates: [2.3522, 48.8566] }
  *     responses:
  *       201:
  *         description: The user was successfully created
@@ -89,8 +95,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
- *       400:
- *         description: Bad request
+ * 401:
+ *         description: Unauthorized. Please authenticate.
  */
 router.post("/", upload.none(), validateUser, async (req, res) => {
   try {
@@ -191,6 +197,8 @@ router.post("/login", upload.none(), async (req, res) => {
  *     responses:
  *       200:
  *         description: Logout successful
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       500:
  *         description: Internal Server Error
  */
@@ -230,6 +238,8 @@ router.post("/logout", auth, async (req, res) => {
  *     responses:
  *       200:
  *         description: Profile photo uploaded successfully
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       404:
  *         description: User not found
  *       500:
@@ -316,6 +326,8 @@ router.delete("/profile-photo", upload.none(), auth, async (req, res) => {
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       500:
  *         description: Internal Server Error
  */

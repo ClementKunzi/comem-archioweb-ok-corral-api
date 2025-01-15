@@ -57,7 +57,7 @@ const router = express.Router();
  *         user: "60d5f9b5f8d2c72b8c8e4b90"
  *         team1id: "60d5f9b5f8d2c72b8c8e4b91"
  *         team2id: "60d5f9b5f8d2c72b8c8e4b92"
- *         status: "open"
+ *         status: "pending"
  */
 
 /**
@@ -84,6 +84,8 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Session'
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  */
 router.post("/", upload.none(), auth, async (req, res) => {
   try {
@@ -117,6 +119,8 @@ router.post("/", upload.none(), auth, async (req, res) => {
  *                 $ref: '#/components/schemas/Session'
  *       500:
  *         description: Internal Server Error
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  */
 router.get("/", upload.none(), auth, async (req, res) => {
   try {
@@ -149,6 +153,18 @@ router.get("/", upload.none(), auth, async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Session'
+ *             example:
+ *               id: "60d5f9b5f8d2c72b8c8e4b8e"
+ *               created_at: "2023-10-01T12:00:00Z"
+ *               closed_at: "2023-10-01T14:00:00Z"
+ *               game_id: "60d5f9b5f8d2c72b8c8e4b8e"
+ *               session_code: "ABC123"
+ *               user: "60d5f9b5f8d2c72b8c8e4b90"
+ *               team1id: "60d5f9b5f8d2c72b8c8e4b91"
+ *               team2id: "60d5f9b5f8d2c72b8c8e4b92"
+ *               status: "closed"
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       404:
  *         description: Session not found
  *       500:
@@ -189,12 +205,9 @@ router.patch("/close/:id", upload.none(), auth, async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 session:
- *                   $ref: '#/components/schemas/Session'
+ *                              $ref: '#/components/schemas/Session'
+
+ *
  *       400:
  *         description: Invalid session code
  *       404:

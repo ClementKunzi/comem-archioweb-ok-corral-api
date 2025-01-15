@@ -64,12 +64,6 @@ const router = express.Router();
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Game'
  *     responses:
  *       201:
  *         description: The game was successfully created
@@ -98,29 +92,7 @@ router.post("/", auth, async (req, res) => {
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: name
- *         schema:
- *           type: string
- *         description: The name of the game
- *       - in: query
- *         name: game_mode_id
- *         schema:
- *           type: string
- *         description: The ID of the game mode
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: The page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: The number of items per page
+ *
  *     responses:
  *       200:
  *         description: The list of games
@@ -166,7 +138,7 @@ router.get("/", auth, async (req, res) => {
  * @swagger
  * /game/{id}:
  *   put:
- *     summary: Update a game by ID
+ *     summary: Close a game by ID
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
@@ -177,21 +149,17 @@ router.get("/", auth, async (req, res) => {
  *           type: string
  *         required: true
  *         description: The game ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Game'
  *     responses:
  *       200:
- *         description: The game was updated
+ *         description: The game was closed
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
- *       403:
- *         description: Forbidden
+ *       400:
+ *         description: Game is already closed
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       404:
  *         description: Game not found
  *       500:
@@ -203,17 +171,17 @@ router.put("/:id", auth, async (req, res) => {
     if (!game) {
       return res.status(404).json({ error: "Game not found" });
     }
-    if (game.userId.toString() !== req.user.userId) {
-      return res.status(403).json({ error: "Forbidden" });
+    if (game.closed_at) {
+      return res.status(400).json({ error: "Game is already closed" });
     }
-    Object.assign(game, req.body);
+    game.status = "closed";
+    game.closed_at = new Date();
     await game.save();
     res.status(200).json(game);
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 /**
  * @swagger
  * /game/{id}:
@@ -232,6 +200,8 @@ router.put("/:id", auth, async (req, res) => {
  *     responses:
  *       200:
  *         description: The game was deleted
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       403:
  *         description: Forbidden
  *       404:
@@ -277,6 +247,8 @@ router.delete("/:id", auth, async (req, res) => {
  *                     type: string
  *                   totalGames:
  *                     type: integer
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       500:
  *         description: Internal Server Error
  */
@@ -321,6 +293,12 @@ router.get("/stats", auth, async (req, res) => {
  *                 type: string
  *                 format: date-time
  *                 description: The timestamp of team 2's button press
+ *             example:
+ *               gameId: "60d5f9b5f8d2c72b8c8e4b8e"
+ *               team1Id: "60d5f9b5f8d2c72b8c8e4b91"
+ *               team2Id: "60d5f9b5f8d2c72b8c8e4b92"
+ *               team1Timestamp: "2023-10-01T12:00:00Z"
+ *               team2Timestamp: "2023-10-01T12:00:01Z"
  *     responses:
  *       200:
  *         description: The winner was calculated
@@ -332,8 +310,12 @@ router.get("/stats", auth, async (req, res) => {
  *                 winnerId:
  *                   type: string
  *                   description: The ID of the winning team
+ *               example:
+ *                 winnerId: "60d5f9b5f8d2c72b8c8e4b91"
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unauthorized. Please authenticate.
  *       500:
  *         description: Internal Server Error
  */
