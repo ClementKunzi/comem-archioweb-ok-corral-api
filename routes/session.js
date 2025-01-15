@@ -49,16 +49,6 @@ const router = express.Router();
  *           type: string
  *           enum: [open, closed, pending]
  *           description: The status of the session
- *       example:
- *         id: d5fE_asz
- *         created_at: 2023-10-01T10:00:00.000Z
- *         closed_at: 2023-10-01T12:00:00.000Z
- *         game_id: 60d5f9b5f8d2c72b8c8e4b8e
- *         session_code: "123456"
- *         user: 60d5f9b5f8d2c72b8c8e4b90
- *         team1id: 60d5f9b5f8d2c72b8c8e4b91
- *         team2id: 60d5f9b5f8d2c72b8c8e4b92
- *         status: open
  */
 
 /**
