@@ -49,6 +49,7 @@ const router = express.Router();
  *           type: string
  *           enum: [open, closed, pending]
  *           description: The status of the session
+ *       example:
  */
 
 /**
