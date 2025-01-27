@@ -1,10 +1,10 @@
 import express from "express";
 import auth from "../middlewares/auth.js";
 import Game from "../models/Games.js";
-
-// import WsClient from '../websocket/WSClient.js';
-// const wsClient = new WsClient('ws://localhost:8887');
-// await wsClient.connect();
+import upload from "../middlewares/upload.js"; // Importer le middleware upload
+import WsClient from '../websocket/WSClient.js';
+const wsClient = new WsClient('ws://localhost:8887');
+await wsClient.connect();
 
 const router = express.Router();
 
@@ -91,6 +91,10 @@ router.post("/", auth, async (req, res) => {
     const game = new Game({ ...req.body, userId: req.user.userId });
     await game.save();
     res.status(201).json({ message: "Game successfully created", game });
+
+    // wsClient.rpc('createGame', { message: 'New game created', game });
+    wsClient.pub(game.session_id, { action: 'startGame', game });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -343,7 +347,7 @@ router.get("/stats", auth, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
-router.post("/result", async (req, res) => {
+router.post("/result", upload.none(), async (req, res) => {
   const { gameId, team1Id, team2Id, team1Timestamp, team2Timestamp } = req.body;
 
   if (!gameId || !team1Id || !team2Id || !team1Timestamp || !team2Timestamp) {

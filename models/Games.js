@@ -9,22 +9,22 @@ const GameSchema = new mongoose.Schema({
   session_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Session",
-    required: true,
+    required: false,
   },
   game_mode_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "GameMode",
-    required: true,
+    required: false,
   },
   team_1_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
-    required: true,
+    required: false,
   },
   team_2_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
-    required: true,
+    required: false,
   },
 });
 const Game = mongoose.model("Game", GameSchema);

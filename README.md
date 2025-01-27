@@ -32,7 +32,12 @@ API developed with Express and MongoDB as part of the ArchiOWeb course in the 3r
 
    ```bash
    npm run dev
+
+1. **Start the WebSocket server:**
+
+   ```bash
+   npm run ws  
    
-2. **Visit the API**
+3. **Visit the API**
 
    Open http://localhost:3000 to explore the available endpoints

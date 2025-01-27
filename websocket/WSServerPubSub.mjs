@@ -50,6 +50,7 @@ export default class WSServerPubSub extends WSServer {
       hookUnsub,
       clients: new Set(),
     });
+    console.log(this.channels.keys());
     return true;
   }
 
@@ -158,7 +159,9 @@ export default class WSServerPubSub extends WSServer {
 
     if (data.action === 'sub') {
       if (!this.channels.has(data.chan)) {
-        return this.sendSubError(client, data.id, data.chan, 'Unknown chan');
+        this.log('Unknown chan: -' + data.chan + '-');
+        this.log('Chans:', this.channels.keys());
+        return this.sendSubError(client, data.id, data.chan, 'Unknown chan: ' + data.chan);
       }
 
       const chan = this.channels.get(data.chan);
@@ -248,7 +251,7 @@ export default class WSServerPubSub extends WSServer {
 
     const message = JSON.stringify({action: 'pub', chan: chanName, msg});
     for (const client of chan.clients) {
-      this.send(client, message);
+      this.send(client, message);      
     }
 
     return true;

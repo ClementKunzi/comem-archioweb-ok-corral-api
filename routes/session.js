@@ -103,8 +103,9 @@ router.post("/", upload.none(), auth, async (req, res) => {
     });
     await session.save();
     res.status(201).json({ message: "Session successfully created", session });    
-    // Send a message to the 'api' channel
+    
     wsClient.rpc('createChan', { message: 'New session created', session });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -177,6 +178,9 @@ router.patch("/close/:id", upload.none(), auth, async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
     res.status(200).json({ message: "Session successfully closed", session });
+
+    wsClient.rpc('closeChan', { message: 'Channel deleted', session });
+
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
   }
